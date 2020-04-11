@@ -1,0 +1,208 @@
+body {
+    background-image: url(img/landscape-mountains.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    font-family: "roboto", Arial, Helvetica, sans-serif;
+}
+
+.floater {
+    max-width: 600px;
+    background: #fff;
+    font-size: 1.2em;
+    line-height: 1.5;
+    margin: 0 auto;
+    margin-top: 40px;
+    position: relative;
+    transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
+    z-index: 2;
+}
+
+.floater-top {
+    box-sizing: border-box;
+    padding: 10px 10px;
+    transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
+}
+
+.floater input[type='text'] {
+    width: 100%;
+    height: 2em;
+    font-size: large;
+    border: none;
+    outline: 0px solid rgb(233, 233, 233);
+    text-align: center;
+}
+
+.floater input[type='text']:focus {
+    outline: 1px solid rgb(233, 233, 233);
+}
+
+body.show-floater input[type='text'] {
+    outline: 1px solid rgb(233, 233, 233);
+}
+
+.floater .err-msg {
+    color: red;
+    font-size: .8em;
+    font-weight: 400;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.floater-bottom {
+    padding: 0 10px 8px;
+    text-align: right;
+    /* border-top: 1px solid #ddd; */
+}
+
+.floater-bottom button {
+    padding: 15px 20px;
+    border: none;
+    background: rgb(100, 136, 170);
+    color: white;
+    cursor: pointer;
+    font-size: .8em;
+    border-radius: 2px;
+}
+
+.floater-bottom button:hover {
+    background: rgb(97, 179, 255);
+
+}
+
+.loader {
+    position: absolute;
+    background: url(img/Spinner-1s-200px.svg);
+    background-position: center;
+    background-size: cover;
+    width: 100px;
+    height: 100%;
+    left: 40%;
+    top: 0;
+    display: none;
+}
+
+.show-loader {
+    display: block;
+}
+
+.hide-floater {
+    visibility: hidden;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .8);
+    width: 100%;
+    height: 100vh;
+    opacity: 0;
+    transition: .3s ease opacity;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body.show-floater .floater {
+    transform: scale(1.1);
+}
+
+body.show-floater .floater-top {
+    padding: 20px 20px 10px 20px;
+}
+
+body.show-floater .overlay {
+    opacity: 1;
+    z-index: 2;
+    pointer-events: all;
+}
+
+.output {
+    position: relative;
+    max-width: 600px;
+    margin: 30px auto;
+    display: grid;
+    background: #fff;
+    grid-template-columns: auto 30px;
+    overflow: hidden;
+}
+
+.show-output {
+    visibility: visible;
+}
+
+.bookmark {
+    position: relative;
+    display: flex;
+    box-sizing: border-box;
+    margin: 0;
+    transition: .3s ease all;
+    border-top: 1px solid #ddd;
+    z-index: 0;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: rgb(102, 102, 102);
+    align-items: center;
+    width: auto;
+    height: 100px;
+    /* overflow: hidden; */
+}
+
+.close {
+    width: fit-content;
+    height: 20px;
+    display: flex;
+    /* align-items: center; */
+    justify-items: center;
+}
+
+.icon {
+    cursor: pointer;
+    background-color: transparent;
+    color: rgb(184, 184, 184);
+    text-align: center;
+    font-size: 1em;
+    font-weight: 800;
+    padding: 5px 15px 5px 10px;
+    transition: .5s ease color;
+    z-index: 0;
+    border-top: 1px solid #ddd;
+}
+
+.icon:hover {
+    color: red;
+}
+
+.bookmark .img {
+    margin: -10px 0;
+    max-height: 80px;
+    border-radius: 3px;
+    height: auto;
+    max-width: 100px;
+    display: inline-block;
+}
+
+.bookmark .title {
+    margin-left: 30px;
+    display: inline-flex;
+}
+
+.bookmark .video-start {
+    position: absolute;
+    font-size: .8em;
+    bottom: -8px;
+    right: -25px;
+    padding: 0 5px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    box-shadow: 0px 1px 3px rgb(82, 82, 82), 0px -1px 3px white;
+    z-index: 1;
+}
+
+.floater .floater-top {
+    display: block;
+
+}
