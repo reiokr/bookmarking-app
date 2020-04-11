@@ -46,6 +46,18 @@ function errorMsg(msg) {
             floaterTop.classList.remove('msg')
         }, 5000)
 }
+// convert seconds to hh:mm:ss
+var toHHMMSS = (secs) => {
+    var sec_num = parseInt(secs, 10)
+    var hours = Math.floor(sec_num / 3600)
+    var minutes = Math.floor(sec_num / 60) % 60
+    var seconds = sec_num % 60
+
+    return [hours, minutes, seconds]
+        .map(v => v < 10 ? "0" + v : v)
+        .filter((v, i) => v !== "00" || i > 0)
+        .join(":")
+}
 
 // create new bookmark
 function showBookmark(e) {
@@ -63,13 +75,6 @@ function showBookmark(e) {
     /^https?:\/\//i.test(bookmark) || (bookmark = `http://${bookmark}`);
 
     // check if youtube video ends ?t=[digits] or &t=[digits]
-    
-    // ret = /[0-9]{1,}$/;
-    // let time = ret.exec(bookmark)[0];
-    // console.log(time);
-
-    
-
     re = /[\?&]t=[0-9]{1,}$/;
     let urlEnd;
     let videoStart;
@@ -80,9 +85,8 @@ function showBookmark(e) {
     } else {
         console.log(`${bookmark} contains ${re.source}`);
         urlEnd = re.exec(bookmark)[0];
-        let time = urlEnd.replace(/[\?&]t=/, '');
-
-        videoStart = `<br><p class="video-start">Video start at ${time} s</p>`;
+        let time = toHHMMSS(urlEnd.replace(/[\?&]t=/, ''));
+        videoStart = `<br><p class="video-start">Video start at ${time}</p>`;
     };
 
     const url = encodeURIComponent(bookmark);
