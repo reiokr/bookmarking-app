@@ -43,9 +43,10 @@ function errorMsg(msg) {
     }
         setTimeout(() => {
             errMsg.remove();
-            floaterTop.classList.remove('msg')
+            floaterTop.classList.remove('msg');
         }, 5000)
 }
+
 // convert seconds to hh:mm:ss
 var toHHMMSS = (secs) => {
     var sec_num = parseInt(secs, 10)
@@ -138,6 +139,7 @@ function showBookmark(e) {
             console.log(error);
             errorMsg("We can't find what you are looking!");
             removeLoader();
+            bookmarkForm.reset();
         });
     // unzoom floater
     closeFloater()
@@ -164,6 +166,7 @@ function removeBookmark(e) {
     fillBookmarksList(bookmarks);
     storeBookmarks(bookmarks);
 }
+
 // function for stoeing data in local storage
 function storeBookmarks(bookmarks = []) {
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
