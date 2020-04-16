@@ -6,7 +6,7 @@ const body = document.body,
     floaterTop = document.querySelector('.floater-top'),
     addBtn = document.querySelector('[name="add"]'),
     output = document.querySelector(".output"),
-    card = document.querySelector(".card"),
+
     bookmarkForm = document.querySelector(".bookmark-form"),
     loader = document.querySelector(".loader"),
     yt = document.getElementById('yt'),
@@ -152,7 +152,7 @@ function showBookmark(e) {
 // fill the screen with bookmarks using map method. map parameters are bookmark and id for close icon
 function fillBookmarksList(bookmarks = []) {
 
-    const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card"><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <div><img class = "img" src="${bookmark.image}"></div>\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div></div>`).join(" ");
+    const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card"><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div></div>`).join(" ");
     output.innerHTML = bookmarksHtml;
 }
 
@@ -181,12 +181,15 @@ floater.addEventListener("mouseenter", showFloater), floater.addEventListener("c
 output.addEventListener('mouseover', (event) => {
     if (event.target.classList.contains('img')) {
         let newimg = event.target;
-        newimg.classList.add('big-img')
-    }
+        newimg.classList.add('big-img');
+        newimg.parentElement.parentElement.style.zIndex = "3"
+    };
 });
 output.addEventListener('mouseout', (event) => {
     if (event.target.classList.contains('img')) {
         let newimg = event.target;
-        newimg.classList.remove('big-img')
+        newimg.classList.remove('big-img');
+        document.querySelector(".card").classList.remove('card-hover');
+        newimg.parentElement.parentElement.style.zIndex = "0"
     }
 });
