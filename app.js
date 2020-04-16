@@ -6,9 +6,12 @@ const body = document.body,
     floaterTop = document.querySelector('.floater-top'),
     addBtn = document.querySelector('[name="add"]'),
     output = document.querySelector(".output"),
+    card = document.querySelector(".card"),
     bookmarkForm = document.querySelector(".bookmark-form"),
     loader = document.querySelector(".loader"),
-    bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [],
+    yt = document.getElementById('yt'),
+    image = document.querySelector('.img'),
+bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [],
     apiUrl = "https://opengraph.io/api/1.1/site",
     appId = "58858c7bcf07b61e64257391";
 
@@ -23,17 +26,17 @@ function closeFloater() {
 
 // show loading image on screen when proccessing fetch
 function showLoader() {
-    loader.classList.add("show-loader"), addBtn.classList.add("hide-floater"), input.classList.add("hide-floater")
+    loader.classList.add("show-loader"), addBtn.classList.add("hide-floater"), input.classList.add("hide-floater"), yt.classList.add('hide-floater')
 }
 
 // hide loader image
 function removeLoader() {
-    loader.classList.remove("show-loader"), addBtn.classList.remove("hide-floater"), input.classList.remove("hide-floater")
+    loader.classList.remove("show-loader"), addBtn.classList.remove("hide-floater"), input.classList.remove("hide-floater"), yt.classList.remove('hide-floater')
 }
 
 // show error message
 function errorMsg(msg) {
-    if (floaterTop.classList.contains('msg'))return;
+    if (floaterTop.classList.contains('msg')) return;
     else {
         errMsg = document.createElement('p');
         errMsg.className = ('err-msg');
@@ -41,10 +44,10 @@ function errorMsg(msg) {
         floaterTop.appendChild(errMsg);
         floaterTop.classList.add('msg')
     }
-        setTimeout(() => {
-            errMsg.remove();
-            floaterTop.classList.remove('msg');
-        }, 5000)
+    setTimeout(() => {
+        errMsg.remove();
+        floaterTop.classList.remove('msg');
+    }, 5000)
 }
 
 // convert seconds to hh:mm:ss
@@ -65,7 +68,7 @@ function showBookmark(e) {
     e.preventDefault();
     //check if input value is empty string
     if (!input.value) {
-        errorMsg('Field is empty! Valid web address needed');
+        errorMsg('Web URL Required!');
         return;
     }
     showLoader();
@@ -82,7 +85,7 @@ function showBookmark(e) {
     if (!re.test(bookmark)) {
         console.log(`${bookmark} does not contain ${re.source}`);
         urlEnd = "";
-        videoStart ="";
+        videoStart = "";
     } else {
         console.log(`${bookmark} contains ${re.source}`);
         urlEnd = re.exec(bookmark)[0];
@@ -116,11 +119,11 @@ function showBookmark(e) {
             let andUrl;
             let and = /&list/;
             if (!and.test(youtubeUrlnew)) {
-                console.log('does not contain &list')
+                // console.log('does not contain &list')
             } else {
                 let newString = and.exec(youtubeUrlnew);
                 andUrl = youtubeUrlnew.replace(newString[0], '?list');
-                console.log(`${youtubeUrlnew} contains ${and.source}`)
+                // console.log(`${youtubeUrlnew} contains ${and.source}`)
                 bookmark.url = andUrl;
             }
 
@@ -142,13 +145,14 @@ function showBookmark(e) {
             bookmarkForm.reset();
         });
     // unzoom floater
-    closeFloater()
+    closeFloater();
+
 }
 
 // fill the screen with bookmarks using map method. map parameters are bookmark and id for close icon
 function fillBookmarksList(bookmarks = []) {
 
-    const bookmarksHtml = bookmarks.map((bookmark, id) => `<a class="bookmark" href="${bookmark.url}" target="_blank">\n        <div><img class = "img" src="${bookmark.image}"></div>\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="close"><span class="icon" data-id="${id}">✖</span> </div> `).join(" ");
+    const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card"><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <div><img class = "img" src="${bookmark.image}"></div>\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div></div>`).join(" ");
     output.innerHTML = bookmarksHtml;
 }
 
@@ -174,3 +178,15 @@ function storeBookmarks(bookmarks = []) {
 
 // event listeners
 floater.addEventListener("mouseenter", showFloater), floater.addEventListener("click", showFloater), overlay.addEventListener("click", closeFloater), floater.addEventListener("mouseleave", closeFloater), bookmarkForm.addEventListener("submit", showBookmark), output.addEventListener("click", removeBookmark), fillBookmarksList(bookmarks);
+output.addEventListener('mouseover', (event) => {
+    if (event.target.classList.contains('img')) {
+        let newimg = event.target;
+        newimg.classList.add('big-img')
+    }
+});
+output.addEventListener('mouseout', (event) => {
+    if (event.target.classList.contains('img')) {
+        let newimg = event.target;
+        newimg.classList.remove('big-img')
+    }
+});

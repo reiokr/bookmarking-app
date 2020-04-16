@@ -13,25 +13,29 @@ body {
     font-size: 1.2em;
     line-height: 1.5;
     margin: 0 auto;
-    margin-top: 40px;
+    margin-top: 30px;
     position: relative;
     transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
     z-index: 2;
-
 }
 
 .floater p {
     margin: 0 auto;
     display: flex;
-    font-size: 1em;
+    font-size: .9em;
     text-align: center;
     justify-content: center;
     align-items: center;
 }
 
 .floater img {
-    width: 80px;
-    margin-top: 5px;
+    width: 70px;
+    margin-top: 10px;
+    transition: width .3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.floater img:hover {
+    width: 75px;
 }
 
 .floater-top {
@@ -74,9 +78,9 @@ body.show-floater input[type='text'] {
 }
 
 .floater-bottom button {
-    padding: 15px 20px;
+    padding: 10px 20px;
     border: none;
-    background: rgb(100, 136, 170);
+    background: rgb(56, 138, 214);
     color: white;
     cursor: pointer;
     font-size: .8em;
@@ -122,7 +126,7 @@ body.show-floater input[type='text'] {
 }
 
 body.show-floater .floater {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 body.show-floater .floater-top {
@@ -135,13 +139,28 @@ body.show-floater .overlay {
     pointer-events: all;
 }
 
+.container{
+    width: 95%;
+    margin: 0 auto;
+    height: 100%;
+}
+
 .output {
-    position: relative;
-    max-width: 600px;
+    width: 100%;
+    height: auto;
     margin: 30px auto;
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 10px;
+}
+
+.card {
+    position: relative;
+    /* min-width: 400px; */
+    /* max-width: 600px; */
+    display: grid;
     background: #fff;
-    grid-template-columns: auto 30px;
+    grid-template-columns: auto 20px;
     overflow: hidden;
 }
 
@@ -155,9 +174,9 @@ body.show-floater .overlay {
     box-sizing: border-box;
     margin: 0;
     transition: .3s ease all;
-    border-top: 1px solid #ddd;
+    /* border-top: 1px solid #ddd; */
     z-index: 0;
-    padding: 15px 20px;
+    padding: 10px;
     text-decoration: none;
     color: rgb(102, 102, 102);
     align-items: center;
@@ -177,27 +196,38 @@ body.show-floater .overlay {
 .icon {
     cursor: pointer;
     background-color: transparent;
-    color: rgb(184, 184, 184);
+    color: rgb(110, 110, 110);
     text-align: center;
     font-size: 1em;
     font-weight: 800;
-    padding: 5px 15px 5px 10px;
-    transition: .5s ease color;
+    padding: 2px;
+    transition: .3s ease color;
     z-index: 0;
-    border-top: 1px solid #ddd;
+    /* border-top: 1px solid #ddd; */
 }
 
 .icon:hover {
     color: red;
 }
 
-.bookmark .img {
-    margin: -10px 0;
+.img {
+    margin: -10px;
+    margin-left: 0;
     max-height: 80px;
     border-radius: 3px;
     height: auto;
     max-width: 100px;
     display: inline-block;
+    transition: margin .3 cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.big-img{
+    max-height: 120px;
+    max-width: 150px;
+}
+
+.img:hover{
+    margin: -50;        
 }
 
 .bookmark .title {
@@ -207,17 +237,58 @@ body.show-floater .overlay {
 
 .bookmark .video-start {
     position: absolute;
-    font-size: .8em;
-    bottom: -8px;
-    right: -25px;
+    font-size: .85em;
+    color: blueviolet;
+    background: white;
+    bottom: -11px;
+    right: -17px;
     padding: 0 5px;
-    border: 1px solid transparent;
+    /* border: 1px solid blueviolet; */
     border-radius: 3px;
-    box-shadow: 0px 1px 3px rgb(82, 82, 82), 0px -1px 3px white;
+    box-shadow: 0px 2px 3px rgb(82, 82, 82), 0px -1px 3px rgb(218, 218, 218);
     z-index: 1;
 }
 
 .floater .floater-top {
     display: block;
+}
 
+.tooltip {
+    position: relative;
+    display: inline-block;
+
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(255, 185, 185);
+    color: black;
+    font-size: .8em;
+    text-align: center;
+    border-radius: 0px;
+    padding: 3px 3px;
+    position: absolute;
+    z-index: 1;
+    top: 5%;
+    right: 140%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgb(255, 185, 185);
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
 }
