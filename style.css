@@ -139,7 +139,7 @@ body.show-floater .overlay {
     pointer-events: all;
 }
 
-.container{
+.container {
     width: 95%;
     margin: 0 auto;
     height: 100%;
@@ -150,14 +150,14 @@ body.show-floater .overlay {
     height: auto;
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: 10px;
 }
 
 .card {
     position: relative;
     /* min-width: 400px; */
-    /* max-width: 600px; */
+    max-width: 600px;
     display: grid;
     background: #fff;
     grid-template-columns: auto 20px;
@@ -221,13 +221,13 @@ body.show-floater .overlay {
     transition: margin .3 cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.big-img{
+.big-img {
     max-height: 120px;
     max-width: 150px;
 }
 
-.img:hover{
-    margin: -50;        
+.img:hover {
+    margin: -50;
 }
 
 .bookmark .title {
