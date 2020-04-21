@@ -11,7 +11,7 @@ const body = document.body,
     loader = document.querySelector(".loader"),
     yt = document.getElementById('yt'),
     image = document.querySelector('.img'),
-bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [],
+    bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [],
     apiUrl = "https://opengraph.io/api/1.1/site",
     appId = "58858c7bcf07b61e64257391";
 
@@ -161,6 +161,9 @@ function removeBookmark(e) {
     // check if mouse target is close icon
     if (!e.target.matches(".icon")) return;
 
+    const answer = confirm("Are you sure?");
+    if (!answer) return;
+
     // pass the id value to index
     const index = e.target.dataset.id;
 
@@ -171,7 +174,7 @@ function removeBookmark(e) {
     storeBookmarks(bookmarks);
 }
 
-// function for stoeing data in local storage
+// Store bookmarks in local storage
 function storeBookmarks(bookmarks = []) {
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
 }
