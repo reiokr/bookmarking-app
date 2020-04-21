@@ -1,10 +1,11 @@
 body {
-    background-image: url(img/landscape-mountains.jpg);
+    background-image: url(img/pink-milkiway.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
     font-family: "roboto", Arial, Helvetica, sans-serif;
+
 }
 
 .floater {
@@ -153,6 +154,15 @@ body.show-floater .overlay {
     gap: 10px;
 }
 
+.less-cards {
+    width: 70%;
+    height: auto;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 10px;
+}
+
 .card {
     position: relative;
     max-width: 600px;
@@ -284,16 +294,22 @@ body.show-floater .overlay {
     opacity: 1;
 }
 
-@media screen and (max-width: 442px){
-    body{
+@media screen and (max-width: 1850px) {
+    .less-cards {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 442px) {
+    body {
         margin-top: 0;
     }
-    
-    .floater{
+
+    .floater {
         margin: 0 10px;
     }
 
-    .floater p{
+    .floater p {
         font-size: .65em;
     }
 
@@ -307,8 +323,12 @@ body.show-floater .overlay {
         text-align: center;
     }
 
-    .output{
+    .output {
         margin-top: 10px;
+    }
+
+    .less-cards {
+        width: 100%;
     }
 
     .floater img {
@@ -321,7 +341,7 @@ body.show-floater .overlay {
         width: 55px;
     }
 
-    .card{
+    .card {
         max-width: 90vw;
     }
 }

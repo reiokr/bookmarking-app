@@ -154,6 +154,7 @@ function fillBookmarksList(bookmarks = []) {
 
     const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card"><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div></div>`).join(" ");
     output.innerHTML = bookmarksHtml;
+    lessCards();
 }
 
 // function- remove bookmark from screen and local storage
@@ -196,3 +197,12 @@ output.addEventListener('mouseout', (event) => {
         newimg.parentElement.parentElement.style.zIndex = "0"
     }
 });
+
+function lessCards() {
+    const countCard = output.childElementCount;
+    if (countCard <= 21) {
+        output.classList.add('less-cards')
+    } else {
+        output.classList.remove('less-cards')
+    }
+}
