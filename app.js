@@ -6,7 +6,6 @@ const body = document.body,
     floaterTop = document.querySelector('.floater-top'),
     addBtn = document.querySelector('[name="add"]'),
     output = document.querySelector(".output"),
-
     bookmarkForm = document.querySelector(".bookmark-form"),
     loader = document.querySelector(".loader"),
     yt = document.getElementById('yt'),
@@ -56,7 +55,6 @@ var toHHMMSS = (secs) => {
     var hours = Math.floor(sec_num / 3600)
     var minutes = Math.floor(sec_num / 60) % 60
     var seconds = sec_num % 60
-
     return [hours, minutes, seconds]
         .map(v => v < 10 ? "0" + v : v)
         .filter((v, i) => v !== "00" || i > 0)
@@ -146,33 +144,66 @@ function showBookmark(e) {
         });
     // unzoom floater
     closeFloater();
-
 }
 
 // fill the screen with bookmarks using map method. map parameters are bookmark and id for close icon
 function fillBookmarksList(bookmarks = []) {
-
-    const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card"><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div></div>`).join(" ");
+    const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card"><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="edit-input"><form><input type="text" value="${bookmark.url}"><button type="submit" class="edit-icon-ok" data-id="${id}">&#10004;</button></form><span class="edit-icon-close" data-id="${id}">&#10006;</span></div><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div><div class="edit tooltip"><span class="edit-icon" data-id="${id}">&#128397;</span><span class="tooltipedit">Edit Bookmark?</span></div></div>`).join(" ");
     output.innerHTML = bookmarksHtml;
     lessCards();
 }
 
-// function- remove bookmark from screen and local storage
+// remove bookmark from screen and local storage
 function removeBookmark(e) {
     // check if mouse target is close icon
     if (!e.target.matches(".icon")) return;
-
+    // confirm window
     const answer = confirm("Are you sure?");
     if (!answer) return;
-
     // pass the id value to index
     const index = e.target.dataset.id;
 
     // remove bookmark using splice method
     bookmarks.splice(index, 1);
-
     fillBookmarksList(bookmarks);
     storeBookmarks(bookmarks);
+}
+
+// edit bookmark function
+function editBookmark(e) {
+    const editIcon = e.target;
+    // const bookmark = editIcon.parentElement.previousElementSibling.previousElementSibling.previousElementSibling;
+    if (!e.target.matches(".edit-icon")) return;
+    const editInput = e.target.parentElement.previousElementSibling.previousElementSibling;
+    if (editIcon) {
+        editInput.classList.toggle('show-edit-input');
+    }
+    const editForm = editInput.firstElementChild;
+    const closeBtn = e.target.parentElement.previousElementSibling.previousElementSibling.firstElementChild.lastElementChild;
+    console.log(closeBtn)
+
+    editForm.addEventListener('submit', changeBookmark);
+
+    e.preventDefault()
+}
+
+// close edit bookmark
+function closeEdit(e) {
+    if (!e.target.matches('.edit-icon-close')) return;
+    // const editIconClose = e.target;
+    const editInput = e.target.parentElement;
+    editInput.classList.remove('show-edit-input');
+
+    e.preventDefault()
+}
+
+// Change bookmark
+function changeBookmark(e) {
+    if (!e.target.matches('form')) return;
+    const input = e.target.firstElementChild
+    console.log(input.value);
+    // closeEdit();
+    e.preventDefault()
 }
 
 // Store bookmarks in local storage
@@ -181,7 +212,7 @@ function storeBookmarks(bookmarks = []) {
 }
 
 // event listeners
-floater.addEventListener("mouseenter", showFloater), floater.addEventListener("click", showFloater), overlay.addEventListener("click", closeFloater), floater.addEventListener("mouseleave", closeFloater), bookmarkForm.addEventListener("submit", showBookmark), output.addEventListener("click", removeBookmark), fillBookmarksList(bookmarks);
+floater.addEventListener("mouseenter", showFloater), floater.addEventListener("click", showFloater), overlay.addEventListener("click", closeFloater), floater.addEventListener("mouseleave", closeFloater), bookmarkForm.addEventListener("submit", showBookmark), output.addEventListener("click", removeBookmark), output.addEventListener('click', editBookmark), output.addEventListener('click', closeEdit), fillBookmarksList(bookmarks);
 output.addEventListener('mouseover', (event) => {
     if (event.target.classList.contains('img')) {
         let newimg = event.target;
@@ -198,11 +229,8 @@ output.addEventListener('mouseout', (event) => {
     }
 });
 
+// less cards in row for bigger screens
 function lessCards() {
     const countCard = output.childElementCount;
-    if (countCard <= 21) {
-        output.classList.add('less-cards')
-    } else {
-        output.classList.remove('less-cards')
-    }
+    countCard <= 36 ? output.classList.add('less-cards') : output.classList.remove('less-cards')
 }
