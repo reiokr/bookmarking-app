@@ -104,9 +104,6 @@ body.show-floater input[type='text'] {
     display: none;
 }
 
-.show-loader {
-    display: block;
-}
 
 .hide-floater {
     visibility: hidden;
@@ -171,6 +168,22 @@ body.show-floater .overlay {
     grid-template-columns: auto 20px;
 }
 
+.loader1 {
+    position: absolute;
+    background: url(img/Spinner-1s-200px.svg);
+    background-position: center;
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+    left: 40%;
+    top: 0;
+    display: none;
+}
+
+.show-loader {
+    display: block;
+}
+
 .show-output {
     visibility: visible;
 }
@@ -196,20 +209,25 @@ body.show-floater .overlay {
 }
 
 .edit-input {
-    width: 100%;
+    background: rgb(172, 172, 172);
+    position: absolute;
+    width: 97%;
     margin: 3px 10px 5px 10px;
+    padding: 5px;
     display: none;
+    bottom: 0;
+    box-sizing: border-box;
 }
 
 .edit-input form {
     display: grid;
-    grid-template-columns: auto 30px;
+    grid-template-columns: auto 40px;
 }
 
 .edit-input input {
     width: 100%;
     height: 1.3rem;
-    font-size: 1rem;
+    font-size: .9rem;
     grid-column: 1;
     grid-row: 1;
 }
@@ -222,8 +240,8 @@ body.show-floater .overlay {
 .edit-icon-close {
     grid-column: 2;
     grid-row: 1;
-    padding: 3px;
-    width: 20px;
+    padding: 3px 0;
+    width: 10px;
     height: 1.3rem;
     text-align: center;
     cursor: pointer;
@@ -262,7 +280,7 @@ body.show-floater .overlay {
     grid-column: 2;
     grid-row: 1;
     text-align: center;
-    background-color: rgb(255, 227, 231);
+    /* background-color: rgb(255, 227, 231); */
     transition: all .3s linear;
 
 }
@@ -295,7 +313,7 @@ body.show-floater .overlay {
     grid-row: 1;
     margin-top: 25px;
     justify-items: center;
-    background: rgb(219, 241, 248);
+    /* background: rgb(219, 241, 248); */
     transition: all .3s linear;
 
 }
