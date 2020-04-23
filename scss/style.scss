@@ -2,7 +2,7 @@
 
 body {
     background: $dark-color;
-    background-image: url('/BookmarkingApp/img/jonathan-wheeler-unsplash-taust.jpg');
+    background-image: url('../img/jonathan-wheeler-unsplash-taust.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -116,7 +116,7 @@ body.show-floater .overlay {
 
         .loader {
             position: absolute;
-            background: url(/BookmarkingApp/img/Spinner-1s-200px.svg);
+            background: url("../img/Spinner-1s-200px.svg");
             background-position: center;
             background-size: cover;
             width: 100px;
