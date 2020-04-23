@@ -30,7 +30,7 @@ function showLoader() {
 
 function showLoader1(id) {
     const loader1 = document.getElementById("loader" + id);
-    const card = document.getElementById(id).firstElementChild.nextElementSibling;
+    const card = document.getElementById(id).firstElementChild;
     card.style.visibility = "hidden";
     loader1.classList.add("show-loader");
 }
@@ -41,8 +41,7 @@ function removeLoader() {
 }
 
 function removeLoader1(id) {
-    const loader1 = document.getElementById("loader" + id);
-    const card = document.getElementById(id).firstElementChild.nextElementSibling;
+    const card = document.getElementById(id).firstElementChild;
     card.style.visibility = "visible";
     loader1.classList.remove("show-loader");
 }
@@ -177,13 +176,12 @@ function getEditedUrl(url, id, bookmark) {
             fillBookmark(bookmark, id);
             bookmarks[id] = bookmark;
             storeBookmarks(bookmarks);
-            removeLoader1(id);
+            // removeLoader1();
         })
         .catch(error => {
             console.log(error);
-            errorMsg("We can't find what you are looking!");
             removeLoader1(id);
-            document.getElementById(id).firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild.reset()
+            bookmarkForm.reset();
         })
 }
 
@@ -210,7 +208,7 @@ function showBookmark(e) {
 
 // fill the screen with bookmarks using map method. map parameters are bookmark and id for close icon
 function fillBookmarksList(bookmarks = []) {
-    const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card" id="${id}"><div class="card-overlay" id="overlay${id}"></div><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="loader1" id="loader${id}"></div><div class="edit-input"><form><input type="text" value="${bookmark.url}"><button type="submit" class="edit-icon-ok" data-id="${id}">&#10004;</button></form><span class="edit-icon-close" data-id="${id}">&#10006;</span></div><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div><div class="edit tooltip"><span class="edit-icon" data-id="${id}">&#128397;</span><span class="tooltipedit">Edit Bookmark?</span></div></div>`).join(" ");
+    const bookmarksHtml = bookmarks.map((bookmark, id) => `<div class="card" id="${id}"><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="loader1" id="loader${id}"></div><div class="edit-input"><form><input type="text" value="${bookmark.url}"><button type="submit" class="edit-icon-ok" data-id="${id}">&#10004;</button></form><span class="edit-icon-close" data-id="${id}">&#10006;</span></div><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div><div class="edit tooltip"><span class="edit-icon" data-id="${id}">&#128397;</span><span class="tooltipedit">Edit Bookmark?</span></div></div>`).join(" ");
     output.innerHTML = bookmarksHtml;
     lessCards();
 }
@@ -239,18 +237,16 @@ function removeBookmark(e) {
 // edit bookmark function
 function editBookmark(e) {
     const editIcon = e.target;
-    // const id = editIcon.dataset.id;
-    // const overlay = document.getElementById("overlay"+id);
+    // const bookmark = editIcon.parentElement.previousElementSibling.previousElementSibling.previousElementSibling;
     if (!e.target.matches(".edit-icon")) return;
     const editInput = e.target.parentElement.previousElementSibling.previousElementSibling;
     if (editIcon) {
         editInput.classList.toggle('show-edit-input');
-        // overlay.classList.toggle('card-overlay-active');
     }
     const editForm = editInput.firstElementChild;
     // add event listener / submit edited bookmark
     editForm.addEventListener('submit', changeBookmark);
-    e.preventDefault();
+    e.preventDefault()
 }
 
 // close bookmark editing field
@@ -295,13 +291,13 @@ function lessCards() {
 
 // event listeners
 floater.addEventListener("mouseenter", showFloater), floater.addEventListener("click", showFloater), overlay.addEventListener("click", closeFloater), floater.addEventListener("mouseleave", closeFloater), bookmarkForm.addEventListener("submit", showBookmark), output.addEventListener("click", removeBookmark), output.addEventListener('click', editBookmark), output.addEventListener('click', closeEdit), fillBookmarksList(bookmarks);
-// output.addEventListener('mouseover', (event) => {
-//     if (event.target.classList.contains('img')) {
-//         let newimg = event.target;
-//         newimg.classList.add('big-img');
-//         newimg.parentElement.parentElement.style.zIndex = "3"
-//     };
-// });
+output.addEventListener('mouseover', (event) => {
+    if (event.target.classList.contains('img')) {
+        let newimg = event.target;
+        newimg.classList.add('big-img');
+        newimg.parentElement.parentElement.style.zIndex = "3"
+    };
+});
 output.addEventListener('mouseout', (event) => {
     if (event.target.classList.contains('img')) {
         let newimg = event.target;
