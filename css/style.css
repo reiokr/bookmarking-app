@@ -6,6 +6,9 @@ body {
   background-attachment: fixed;
   background-size: cover;
   font-family: "roboto", Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 body.show-floater .floater {
