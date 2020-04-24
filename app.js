@@ -14,6 +14,36 @@ const body = document.body,
     apiUrl = "https://opengraph.io/api/1.1/site",
     appId = "58858c7bcf07b61e64257391";
 
+// create variables for card elements
+const card = (function () {
+    return {
+        card: function (id) {
+            return document.getElementById(id);
+        },
+        overlay: function (id) {
+            return this.card(id).firstElementChild;
+        },
+        bookmark: function (id) {
+            return this.overlay(id).nextElementSibling;
+        },
+        loader: function (id) {
+            return this.bookmark(id).nextElementSibling;
+        },
+        edit: function (id) {
+            return this.loader(id).nextElementSibling;
+        },
+        form: function (id) {
+            return this.edit(id).firstElementChild;
+        },
+        input: function (id) {
+            return this.form(id).firstElementChild;
+        },
+        tooltip: function (id) {
+            return this.edit(id).nextElementSibling.nextElementSibling.lastElementChild
+        }
+    }
+})()
+
 // zoom floater on screen
 function showFloater() {
     body.classList.add("show-floater")
@@ -29,10 +59,8 @@ function showLoader() {
 }
 
 function showLoader1(id) {
-    const loader1 = document.getElementById("loader" + id);
-    const card = document.getElementById(id).firstElementChild.nextElementSibling;
-    card.style.visibility = "hidden";
-    loader1.classList.add("show-loader");
+    card.bookmark(id).style.visibility = "hidden";
+    card.loader(id).classList.add("show-loader");
 }
 
 // hide loader image
@@ -41,25 +69,26 @@ function removeLoader() {
 }
 
 function removeLoader1(id) {
-    const loader1 = document.getElementById("loader" + id);
-    const card = document.getElementById(id).firstElementChild.nextElementSibling;
-    card.style.visibility = "visible";
-    loader1.classList.remove("show-loader");
+    card.bookmark(id).style.visibility = "visible";
+    card.loader(id).classList.remove("show-loader");
 }
 
-// show error message
-function errorMsg(msg) {
-    if (floaterTop.classList.contains('msg')) return;
-    else {
-        errMsg = document.createElement('p');
-        errMsg.className = ('err-msg');
-        errMsg.innerText = msg;
-        floaterTop.appendChild(errMsg);
-        floaterTop.classList.add('msg')
+// show error message function
+function errorMsg(msg, id) {
+    const errMsg = document.createElement('p');
+    errMsg.innerText = msg;
+    if (id) {
+        errMsg.className = ('err-msg-card');
+        card.card(id).appendChild(errMsg)
+    } else {
+        if (floaterTop.classList.contains('msg')) return;
+        else {
+            errMsg.className = ('err-msg');
+            floaterTop.appendChild(errMsg);
+        }
     }
     setTimeout(() => {
         errMsg.remove();
-        floaterTop.classList.remove('msg');
     }, 5000)
 }
 
@@ -93,6 +122,7 @@ function checkBookmark(bookmark) {
     };
     return [bookmark, urlEnd, videoStart];
 }
+
 // check if url is from YouTube and make some changes with regular expressions
 function checkYouTubeUrl(url) {
     // check if input is YouTube video and replace www.youtube.com/watch?v= to youtu.be/
@@ -133,7 +163,7 @@ function getUrl(url, bookmark) {
                 title: data.hybridGraph.title + videoStart,
                 image: data.hybridGraph.image,
                 url: data.hybridGraph.url + urlEnd
-            };
+            }
             // check url
             newUrl = checkYouTubeUrl(bookmark.url);
             bookmark.url = newUrl;
@@ -167,12 +197,15 @@ function getEditedUrl(url, id, bookmark) {
     fetch(`${apiUrl}/${url}?app_id=${appId}`)
         .then(response => response.json())
         .then(data => {
+
             const bookmark = {
                 title: data.hybridGraph.title + videoStart,
                 image: data.hybridGraph.image,
                 url: data.hybridGraph.url + urlEnd
-            };
-            newUrl = checkYouTubeUrl(bookmark.url);
+            }
+
+            // check if it's youtube url
+            const newUrl = checkYouTubeUrl(bookmark.url);
             bookmark.url = newUrl;
             fillBookmark(bookmark, id);
             bookmarks[id] = bookmark;
@@ -181,9 +214,10 @@ function getEditedUrl(url, id, bookmark) {
         })
         .catch(error => {
             console.log(error);
-            errorMsg("We can't find what you are looking!");
             removeLoader1(id);
-            document.getElementById(id).firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild.reset()
+            fillBookmark(bookmarks[id], id);
+            errorMsg("We can't find what you are looking!", id);
+            card.form(id).reset()
         })
 }
 
@@ -217,8 +251,8 @@ function fillBookmarksList(bookmarks = []) {
 
 // fill edited bookmark
 function fillBookmark(bookmark, id) {
-    const card = document.getElementById(id);
-    card.innerHTML = `<a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="loader1" id="loader${id}"></div><div class="edit-input"><form><input type="text" value="${bookmark.url}"><button type="submit" class="edit-icon-ok" data-id="${id}">&#10004;</button></form><span class="edit-icon-close" data-id="${id}">&#10006;</span></div><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div><div class="edit tooltip"><span class="edit-icon" data-id="${id}">&#128397;</span><span class="tooltipedit">Edit Bookmark?</span></div>`;
+
+    card.card(id).innerHTML = `<div class="card-overlay" id="overlay${id}"></div><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="loader1" id="loader${id}"></div><div class="edit-input"><form><input type="text" value="${bookmark.url}"><button type="submit" class="edit-icon-ok" data-id="${id}">&#10004;</button></form><span class="edit-icon-close" data-id="${id}">&#10006;</span></div><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div><div class="edit tooltip"><span class="edit-icon" data-id="${id}">&#128397;</span><span class="tooltipedit">Edit Bookmark?</span></div>`;
 }
 
 // remove bookmark from screen and local storage
@@ -239,36 +273,37 @@ function removeBookmark(e) {
 // edit bookmark function
 function editBookmark(e) {
     const editIcon = e.target;
-    // const id = editIcon.dataset.id;
-    // const overlay = document.getElementById("overlay"+id);
+    const id = editIcon.dataset.id;
     if (!e.target.matches(".edit-icon")) return;
-    const editInput = e.target.parentElement.previousElementSibling.previousElementSibling;
-    if (editIcon) {
-        editInput.classList.toggle('show-edit-input');
-        // overlay.classList.toggle('card-overlay-active');
-    }
-    const editForm = editInput.firstElementChild;
-    // add event listener / submit edited bookmark
-    editForm.addEventListener('submit', changeBookmark);
+    // toggle card overlay
+    card.overlay(id).classList.toggle('card-overlay-active');
+    // hide tooltip
+    // card.tooltip(id).style.visibility = "hidden";
+    let edit = card.edit(id)
+    //event listener toggle edit button
+    edit.classList.toggle('show-edit-input');
+    // add event listener submit edited url
+    edit.addEventListener('submit', changeBookmark);
     e.preventDefault();
 }
 
 // close bookmark editing field
 function closeEdit(e) {
     if (!e.target.matches('.edit-icon-close')) return;
+    const id = e.target.dataset.id;
+    // remove card overlay
+    card.overlay(id).classList.remove('card-overlay-active');
+    // change tooltip style
+    card.tooltip(id).style.visibility = "visible";
     // remove input field
-    const editInput = e.target.parentElement;
-    editInput.classList.remove('show-edit-input');
+    card.edit(id).classList.remove('show-edit-input');
     e.preventDefault()
 }
 
 // Change bookmark
 function changeBookmark(e) {
-    if (!e.target.matches('form')) return;
-    // get input value
-    let input = e.target.firstElementChild.value;
-    // get id
     const id = e.target.lastElementChild.dataset.id;
+    let input = card.input(id).value
     // validate url
     input = checkBookmark(input)[0];
     const url = encodeURIComponent(input);
@@ -277,8 +312,7 @@ function changeBookmark(e) {
     //  function for scraping edited url using https://opengraph.io 
     getEditedUrl(url, id, input);
     // remove input field
-    const editInput = e.target.parentElement;
-    editInput.classList.remove('show-edit-input');
+    card.edit(id).classList.remove('show-edit-input');
     e.preventDefault()
 }
 
@@ -295,18 +329,12 @@ function lessCards() {
 
 // event listeners
 floater.addEventListener("mouseenter", showFloater), floater.addEventListener("click", showFloater), overlay.addEventListener("click", closeFloater), floater.addEventListener("mouseleave", closeFloater), bookmarkForm.addEventListener("submit", showBookmark), output.addEventListener("click", removeBookmark), output.addEventListener('click', editBookmark), output.addEventListener('click', closeEdit), fillBookmarksList(bookmarks);
-// output.addEventListener('mouseover', (event) => {
+
+// output.addEventListener('mouseout', (event) => {
 //     if (event.target.classList.contains('img')) {
 //         let newimg = event.target;
-//         newimg.classList.add('big-img');
-//         newimg.parentElement.parentElement.style.zIndex = "3"
-//     };
+//         newimg.classList.remove('big-img');
+//         document.querySelector(".card").classList.remove('card-hover');
+//         newimg.parentElement.parentElement.style.zIndex = "0"
+//     }
 // });
-output.addEventListener('mouseout', (event) => {
-    if (event.target.classList.contains('img')) {
-        let newimg = event.target;
-        newimg.classList.remove('big-img');
-        document.querySelector(".card").classList.remove('card-hover');
-        newimg.parentElement.parentElement.style.zIndex = "0"
-    }
-});
