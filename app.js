@@ -39,23 +39,23 @@ const card = (function () {
             return this.form(id).firstElementChild;
         },
         tooltip: function (id) {
-            return this.edit(id).nextElementSibling.nextElementSibling.lastElementChild
+            return this.edit(id).nextElementSibling.nextElementSibling.lastElementChild;
         }
-    }
-})()
+    };
+})();
 
 // zoom floater on screen
 function showFloater() {
-    body.classList.add("show-floater")
+    body.classList.add("show-floater");
 }
 // unzoom floater
 function closeFloater() {
-    body.classList.contains("show-floater") && body.classList.remove("show-floater")
+    body.classList.contains("show-floater") && body.classList.remove("show-floater");
 }
 
 // show loading image on screen when proccessing fetch
 function showLoader() {
-    loader.classList.add("show-loader"), addBtn.classList.add("hide-floater"), input.classList.add("hide-floater"), yt.classList.add('hide-floater')
+    loader.classList.add("show-loader"), addBtn.classList.add("hide-floater"), input.classList.add("hide-floater"), yt.classList.add('hide-floater');
 }
 
 function showLoader1(id) {
@@ -65,7 +65,7 @@ function showLoader1(id) {
 
 // hide loader image
 function removeLoader() {
-    loader.classList.remove("show-loader"), addBtn.classList.remove("hide-floater"), input.classList.remove("hide-floater"), yt.classList.remove('hide-floater')
+    loader.classList.remove("show-loader"), addBtn.classList.remove("hide-floater"), input.classList.remove("hide-floater"), yt.classList.remove('hide-floater');
 }
 
 function removeLoader1(id) {
@@ -79,7 +79,7 @@ function errorMsg(msg, id) {
     errMsg.innerText = msg;
     if (id) {
         errMsg.className = ('err-msg-card');
-        card.card(id).appendChild(errMsg)
+        card.card(id).appendChild(errMsg);
     } else {
         if (floaterTop.classList.contains('msg')) return;
         else {
@@ -89,20 +89,20 @@ function errorMsg(msg, id) {
     }
     setTimeout(() => {
         errMsg.remove();
-    }, 5000)
+    }, 5000);
 }
 
 // convert seconds to hh:mm:ss
 var toHHMMSS = (secs) => {
-    var sec_num = parseInt(secs, 10)
-    var hours = Math.floor(sec_num / 3600)
-    var minutes = Math.floor(sec_num / 60) % 60
-    var seconds = sec_num % 60
+    var sec_num = parseInt(secs, 10);
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor(sec_num / 60) % 60;
+    var seconds = sec_num % 60;
     return [hours, minutes, seconds]
         .map(v => v < 10 ? "0" + v : v)
         .filter((v, i) => v !== "00" || i > 0)
-        .join(":")
-}
+        .join(":");
+};
 
 // validate url with regular expressions
 function checkBookmark(bookmark) {
@@ -119,7 +119,7 @@ function checkBookmark(bookmark) {
         urlEnd = re.exec(bookmark)[0]; // if youtube url ends with video start time .. add to url end 
         let time = toHHMMSS(urlEnd.replace(/[\?&]t=/, '')); // convert to secons minutes and hours
         videoStart = `<br><p class="video-start">Video start at ${time}</p>`; // create info text in screen
-    };
+    }
     return [bookmark, urlEnd, videoStart];
 }
 
@@ -135,7 +135,7 @@ function checkYouTubeUrl(url) {
         url = newUrl;
     }
     // check if in youtube url ?list has changed to &list and change it back
-    let youtubeUrlnew = url
+    let youtubeUrlnew = url;
     let andUrl;
     let and = /&list/;
     if (!and.test(youtubeUrlnew)) {
@@ -146,11 +146,11 @@ function checkYouTubeUrl(url) {
         // console.log(`${youtubeUrlnew} contains ${and.source}`)
         url = andUrl;
     }
-    return url
+    return url;
 }
 
 // fetch url info from https://opengraph.io/api/1.1/site
-function getUrl(url, bookmark) {
+function getUrl(url, bookmark, id) {
     // get variables from checkBookmark
     let urlEnd = checkBookmark(bookmark)[1];
     let videoStart = checkBookmark(bookmark)[2];
@@ -163,62 +163,43 @@ function getUrl(url, bookmark) {
                 title: data.hybridGraph.title + videoStart,
                 image: data.hybridGraph.image,
                 url: data.hybridGraph.url + urlEnd
-            }
+            };
             // check url
             newUrl = checkYouTubeUrl(bookmark.url);
             bookmark.url = newUrl;
 
-            // add bookmark to the list
-            bookmarks.push(bookmark);
-            // show bookmarks on the screen
-
-            fillBookmarksList(bookmarks);
+            if (id) {
+                // fill edited bookmark
+                fillBookmark(bookmark, id);
+                // replace bookmark in list
+                bookmarks[id] = bookmark;
+                removeLoader1(id);
+                card.form(id).reset();
+            } else {
+                // add bookmark to the list
+                bookmarks.push(bookmark);
+                // show bookmarks on the screen
+                fillBookmarksList(bookmarks);
+                removeLoader();
+                bookmarkForm.reset();
+            }
             // store bookmarks in local storage
             storeBookmarks(bookmarks);
-            // reset input form
-            bookmarkForm.reset();
-            // remove loader image
-            removeLoader();
+
             // handle errors
         }).catch(error => {
             console.log(error);
-            errorMsg("We can't find what you are looking!");
-            removeLoader();
-            bookmarkForm.reset();
-        });
-}
-
-function getEditedUrl(url, id, bookmark) {
-    // get variables from checkBookmark
-    let urlEnd = checkBookmark(bookmark)[1];
-    let videoStart = checkBookmark(bookmark)[2];
-
-    // fetch url
-    fetch(`${apiUrl}/${url}?app_id=${appId}`)
-        .then(response => response.json())
-        .then(data => {
-
-            const bookmark = {
-                title: data.hybridGraph.title + videoStart,
-                image: data.hybridGraph.image,
-                url: data.hybridGraph.url + urlEnd
+            if (id) {
+                removeLoader1(id);
+                fillBookmark(bookmarks[id], id);
+                errorMsg("We can't find what you are looking!", id);
+                card.form(id).reset();
+            } else {
+                errorMsg("We can't find what you are looking!");
+                removeLoader();
+                bookmarkForm.reset();
             }
-
-            // check if it's youtube url
-            const newUrl = checkYouTubeUrl(bookmark.url);
-            bookmark.url = newUrl;
-            fillBookmark(bookmark, id);
-            bookmarks[id] = bookmark;
-            storeBookmarks(bookmarks);
-            removeLoader1(id);
-        })
-        .catch(error => {
-            console.log(error);
-            removeLoader1(id);
-            fillBookmark(bookmarks[id], id);
-            errorMsg("We can't find what you are looking!", id);
-            card.form(id).reset()
-        })
+        });
 }
 
 // create new bookmark
@@ -251,7 +232,6 @@ function fillBookmarksList(bookmarks = []) {
 
 // fill edited bookmark
 function fillBookmark(bookmark, id) {
-
     card.card(id).innerHTML = `<div class="card-overlay" id="overlay${id}"></div><a class="bookmark" href="${bookmark.url}" target="_blank">\n        <img class = "img" src="${bookmark.image}">\n        <div class = "title">${bookmark.title}</div>\n        </a><div class="loader1" id="loader${id}"></div><div class="edit-input"><form><input type="text" value="${bookmark.url}"><button type="submit" class="edit-icon-ok" data-id="${id}">&#10004;</button></form><span class="edit-icon-close" data-id="${id}">&#10006;</span></div><div class="close tooltip"><span class="icon" data-id="${id}">&#128465;</span><span class="tooltiptext">Remove Bookmark?</span></div><div class="edit tooltip"><span class="edit-icon" data-id="${id}">&#128397;</span><span class="tooltipedit">Edit Bookmark?</span></div>`;
 }
 
@@ -279,7 +259,7 @@ function editBookmark(e) {
     card.overlay(id).classList.toggle('card-overlay-active');
     // hide tooltip
     // card.tooltip(id).style.visibility = "hidden";
-    let edit = card.edit(id)
+    let edit = card.edit(id);
     //event listener toggle edit button
     edit.classList.toggle('show-edit-input');
     // add event listener submit edited url
@@ -297,44 +277,35 @@ function closeEdit(e) {
     card.tooltip(id).style.visibility = "visible";
     // remove input field
     card.edit(id).classList.remove('show-edit-input');
-    e.preventDefault()
+    e.preventDefault();
 }
 
 // Change bookmark
 function changeBookmark(e) {
     const id = e.target.lastElementChild.dataset.id;
-    let input = card.input(id).value
+    let input = card.input(id).value;
     // validate url
     input = checkBookmark(input)[0];
     const url = encodeURIComponent(input);
     // show loading animation
     showLoader1(id);
     //  function for scraping edited url using https://opengraph.io 
-    getEditedUrl(url, id, input);
+    getUrl(url, input, id);
     // remove input field
     card.edit(id).classList.remove('show-edit-input');
-    e.preventDefault()
+    e.preventDefault();
 }
 
 // Store bookmarks in local storage
 function storeBookmarks(bookmarks = []) {
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 }
 
 // less cards in row for bigger screens
 function lessCards() {
     const countCard = output.childElementCount;
-    countCard <= 36 ? output.classList.add('less-cards') : output.classList.remove('less-cards')
+    countCard <= 36 ? output.classList.add('less-cards') : output.classList.remove('less-cards');
 }
 
 // event listeners
 floater.addEventListener("mouseenter", showFloater), floater.addEventListener("click", showFloater), overlay.addEventListener("click", closeFloater), floater.addEventListener("mouseleave", closeFloater), bookmarkForm.addEventListener("submit", showBookmark), output.addEventListener("click", removeBookmark), output.addEventListener('click', editBookmark), output.addEventListener('click', closeEdit), fillBookmarksList(bookmarks);
-
-// output.addEventListener('mouseout', (event) => {
-//     if (event.target.classList.contains('img')) {
-//         let newimg = event.target;
-//         newimg.classList.remove('big-img');
-//         document.querySelector(".card").classList.remove('card-hover');
-//         newimg.parentElement.parentElement.style.zIndex = "0"
-//     }
-// });
