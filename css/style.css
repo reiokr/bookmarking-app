@@ -34,7 +34,7 @@ body.show-floater .overlay {
   position: fixed;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   width: 100%;
   height: 100vh;
   opacity: 0;
@@ -206,7 +206,7 @@ body.show-floater .overlay {
 
 .container .output .card .loader1 {
   position: absolute;
-  background: url("../img/Spinner-1s-200px.svg");
+  background: url(../img/Spinner-1s-200px.svg);
   background-position: center;
   background-size: cover;
   width: 150px;
@@ -275,7 +275,6 @@ body.show-floater .overlay {
 }
 
 .container .output .card .card-overlay {
-  content: "";
   background: #000;
   opacity: 0;
   position: absolute;
@@ -290,7 +289,7 @@ body.show-floater .overlay {
 
 .container .output .card .card-overlay-active {
   z-index: 2;
-  opacity: .6;
+  opacity: .8;
 }
 
 .container .output .card .err-msg-card {
