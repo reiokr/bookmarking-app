@@ -155,7 +155,7 @@ body.show-floater .overlay {
           outline: none;
           border: none;
         }
-        &:focus{
+        &:focus {
           outline: none;
           border: none;
         }
@@ -553,18 +553,23 @@ body.show-floater .overlay {
   }
 }
 
-@media screen and (max-width: 442px) {
+@media screen and (max-width: 488px) {
   .bookmark-form {
     margin: 0;
     margin-top: -10px;
 
-    .floater {
-      margin: 0 10px;
+    p {
+      font-size: 0.75rem;
+    }
+    img {
+      width: 50px;
+      margin-top: 10px;
 
-      p {
-        font-size: 0.65rem;
+      &:hover {
+        width: 55px;
       }
-
+    }
+    .floater {
       input[type="text"] {
         height: 1.5em;
         font-size: 0.8em;
@@ -572,14 +577,7 @@ body.show-floater .overlay {
         text-align: center;
       }
 
-      img {
-        width: 50px;
-        margin-top: 10px;
-
-        &:hover {
-          width: 55px;
-        }
-      }
+      margin: 0 10px;
     }
   }
 

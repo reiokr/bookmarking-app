@@ -2,6 +2,6 @@
 
 https://ytbookmarks.netlify.app/
 
-Add your bookmarks.
-This app is suitable for learners who use YouTube videos.
-Can bookmark videos at current time.
+**Bookmark your favorite videos or websites.**
+This app is great for learners who use YouTube videos.
+You also can bookmark **YouTube** videos at current time.
