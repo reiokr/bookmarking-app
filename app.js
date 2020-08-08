@@ -187,7 +187,7 @@ function getUrl(url, bookmark, id) {
         card.form(id).reset();
       } else {
         // add bookmark to the list
-        bookmarks.push(bookmark);
+        bookmarks.unshift(bookmark);
         // show bookmarks on the screen
         fillBookmarksList(bookmarks);
         removeLoader();
